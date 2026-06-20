@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: order-saga
+
+server:
+  port: 8081

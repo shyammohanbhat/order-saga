@@ -1,0 +1,69 @@
+CREATE TABLE orders (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customer_id UUID,
+    amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_orders_status
+    ON orders(status);
+
+CREATE TABLE inventory_reservation (
+   reservation_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+   order_id BIGINT NOT NULL,
+   product_id BIGINT NOT NULL,
+   quantity INT NOT NULL,
+   status VARCHAR(30) NOT NULL,
+   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_inventory_order
+    ON inventory_reservation(order_id);
+
+CREATE TABLE payments (
+  payment_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  order_id BIGINT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_payments_order
+    ON payments(order_id);
+
+CREATE TABLE shipments (
+    shipment_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    tracking_number VARCHAR(100),
+    status VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_shipments_order
+    ON shipments(order_id);
+
+CREATE TABLE saga_instance (
+   saga_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+   order_id BIGINT NOT NULL,
+   current_step VARCHAR(50) NOT NULL,
+   status VARCHAR(30) NOT NULL,
+   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_saga_order
+    ON saga_instance(order_id);
+
+CREATE TABLE saga_events (
+    event_id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    saga_id BIGINT NOT NULL,
+    event_type VARCHAR(100) NOT NULL,
+    payload JSONB,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
