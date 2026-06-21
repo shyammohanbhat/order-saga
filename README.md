@@ -157,3 +157,5 @@ process-payment-command
 release-inventory-command
 
 reserve-inventory-command
+
+shipment-created
