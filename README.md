@@ -105,3 +105,55 @@ sequenceDiagram
     CANCELLED --> [*]
 ```
   
+#FLOW
+
+Order Service
+↓
+OrderCreatedEvent
+
+Saga Orchestrator
+↓
+ReserveInventoryCommand
+
+Inventory Service
+↓
+InventoryReservedEvent
+
+Saga Orchestrator
+↓
+ProcessPaymentCommand
+
+Payment Service
+↓
+PaymentSucceededEvent
+OR
+PaymentFailedEvent
+
+Saga Orchestrator
+↓
+CreateShipmentCommand
+OR
+ReleaseInventoryCommand
+
+Shipping Service
+↓
+ShipmentCreatedEvent
+
+Saga Completed
+
+
+#Topics
+
+create-shipment-command
+
+inventory-reserved
+
+order-created
+
+payment-succeeded
+
+process-payment-command
+
+release-inventory-command
+
+reserve-inventory-command

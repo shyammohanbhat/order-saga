@@ -32,7 +32,11 @@ public class SagaCoordinatorService {
 
     sagaEventService.logEvent(savedSaga.getSagaId(), "ORDER_CREATED", orderCreatedEvent);
 
-    ReserveInventoryCommand command = new ReserveInventoryCommand(orderCreatedEvent.orderId());
+    ReserveInventoryCommand command =
+        new ReserveInventoryCommand(
+            orderCreatedEvent.orderId(),
+            orderCreatedEvent.productId(),
+            orderCreatedEvent.quantity());
 
     sagaEventService.logEvent(savedSaga.getSagaId(), "RESERVE_INVENTORY_COMMAND", command);
 

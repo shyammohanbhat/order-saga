@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: inventory-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: admin
+    password: password
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: inventory-service
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+
+server:
+  port: 8083

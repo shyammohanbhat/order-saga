@@ -13,4 +13,6 @@ public class OrderCreatedEvent {
   private Long orderId;
   private Double amount;
   private String customerId;
+  private Long productId;
+  private Integer quantity;
 }

@@ -13,4 +13,9 @@ public class OrderRequest {
 
   private String status;
   private Double amount;
+
+  @JsonProperty("product_id")
+  private Long productId;
+
+  private Integer quantity;
 }

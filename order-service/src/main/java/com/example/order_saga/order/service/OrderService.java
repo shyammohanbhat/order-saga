@@ -34,6 +34,8 @@ public class OrderService {
             .orderId(orderId)
             .amount(orderRequest.getAmount())
             .customerId(orderRequest.getCustomerId())
+            .quantity(orderRequest.getQuantity())
+            .productId(orderRequest.getProductId())
             .build();
 
     ObjectMapper objectMapper = new ObjectMapper();
