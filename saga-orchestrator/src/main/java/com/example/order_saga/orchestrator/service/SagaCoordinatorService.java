@@ -99,4 +99,36 @@ public class SagaCoordinatorService {
         .findByOrderId(orderId)
         .orElseThrow(() -> new RuntimeException("Saga not found for orderId=" + orderId));
   }
+
+  public void handlePaymentFailed(PaymentFailedEvent paymentFailedEvent) {
+
+    SagaInstance saga = findByOrderId(paymentFailedEvent.orderId());
+
+    saga.setStatus("COMPENSATING");
+
+    sagaInstanceRepository.save(saga);
+
+    sagaEventService.logEvent(saga.getSagaId(), "PAYMENT_FAILED", paymentFailedEvent);
+
+    ReleaseInventoryCommand releaseInventoryCommand =
+        new ReleaseInventoryCommand(paymentFailedEvent.orderId());
+
+    sagaEventService.logEvent(
+        saga.getSagaId(), "RELEASE_INVENTORY_COMMAND", releaseInventoryCommand);
+
+    producer.publishReleaseInventory(releaseInventoryCommand);
+  }
+
+  public void handleInventoryReleased(InventoryReleasedEvent event) {
+
+    SagaInstance saga = findByOrderId(event.orderId());
+
+    saga.setStatus("FAILED");
+
+    sagaInstanceRepository.save(saga);
+
+    sagaEventService.logEvent(saga.getSagaId(), "INVENTORY_RELEASED", event);
+
+    sagaEventService.logEvent(saga.getSagaId(), "SAGA_COMPENSATED", event);
+  }
 }

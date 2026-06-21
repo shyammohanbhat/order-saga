@@ -159,3 +159,7 @@ release-inventory-command
 reserve-inventory-command
 
 shipment-created
+
+payment-failed
+
+inventory-released

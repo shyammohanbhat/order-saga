@@ -1,8 +1,11 @@
 package com.example.order_saga.inventory.service;
 
+import com.example.order_saga.inventory.dto.InventoryReleasedEvent;
 import com.example.order_saga.inventory.dto.InventoryReservedEvent;
+import com.example.order_saga.inventory.dto.ReleaseInventoryCommand;
 import com.example.order_saga.inventory.dto.ReserveInventoryCommand;
 import com.example.order_saga.inventory.entity.InventoryReservation;
+import com.example.order_saga.inventory.producer.InventoryReleaseEventProducer;
 import com.example.order_saga.inventory.producer.InventoryReservedEventProducer;
 import com.example.order_saga.inventory.repository.InventoryReservationRepository;
 import java.time.LocalDateTime;
@@ -15,6 +18,7 @@ public class InventoryService {
 
   private final InventoryReservationRepository inventoryReservationRepository;
   private final InventoryReservedEventProducer inventoryReservedEventProducer;
+  private final InventoryReleaseEventProducer inventoryReleaseEventProducer;
 
   public void saveInventoryReservation(ReserveInventoryCommand reserveInventoryCommand) {
     InventoryReservation inventoryReservation =
@@ -34,5 +38,17 @@ public class InventoryService {
         new InventoryReservedEvent(
             reserveInventoryCommand.orderId(), reservationId, reserveInventoryCommand.amount());
     inventoryReservedEventProducer.publishReserveInventoryEvent(inventoryReservedEvent);
+  }
+
+  public void releaseInventory(ReleaseInventoryCommand releaseInventoryCommand) {
+    InventoryReservation inventoryReservation =
+        inventoryReservationRepository
+            .findByOrderId(releaseInventoryCommand.orderId())
+            .orElseThrow();
+
+    inventoryReservation.setStatus("RELEASED");
+    InventoryReleasedEvent inventoryReleasedEvent =
+        new InventoryReleasedEvent(releaseInventoryCommand.orderId());
+    inventoryReleaseEventProducer.publishReleaseInventoryEvent(inventoryReleasedEvent);
   }
 }
