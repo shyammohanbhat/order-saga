@@ -1,5 +1,6 @@
 package com.example.order_saga.orchestrator.producer;
 
+import com.example.order_saga.orchestrator.dto.ProcessPaymentCommand;
 import com.example.order_saga.orchestrator.dto.ReserveInventoryCommand;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,5 +20,12 @@ public class SagaCommandProducer {
     kafkaTemplate.send("reserve-inventory-command", objectMapper.writeValueAsString(command));
 
     log.info("Published ReserveInventoryCommand for order {}", command.orderId());
+  }
+
+  public void publishProcessPayment(ProcessPaymentCommand command) {
+
+    kafkaTemplate.send("process-payment-command", objectMapper.writeValueAsString(command));
+
+    log.info("Published ProcessPaymentCommand for order {}", command.orderId());
   }
 }

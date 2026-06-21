@@ -31,7 +31,8 @@ public class InventoryService {
         inventoryReservationRepository.save(inventoryReservation).getReservationId();
 
     InventoryReservedEvent inventoryReservedEvent =
-        new InventoryReservedEvent(reserveInventoryCommand.orderId(), reservationId);
+        new InventoryReservedEvent(
+            reserveInventoryCommand.orderId(), reservationId, reserveInventoryCommand.amount());
     inventoryReservedEventProducer.publishReserveInventoryEvent(inventoryReservedEvent);
   }
 }
