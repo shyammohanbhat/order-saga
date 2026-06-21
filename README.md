@@ -108,35 +108,49 @@ sequenceDiagram
 #FLOW
 
 Order Service
+
 ↓
+
 OrderCreatedEvent
 
 Saga Orchestrator
+
 ↓
+
 ReserveInventoryCommand
 
-Inventory Service
+Inventory Service 
+
 ↓
+
 InventoryReservedEvent
 
 Saga Orchestrator
+
 ↓
+
 ProcessPaymentCommand
 
 Payment Service
+
 ↓
+
 PaymentSucceededEvent
 OR
 PaymentFailedEvent
 
 Saga Orchestrator
+
 ↓
+
 CreateShipmentCommand
 OR
 ReleaseInventoryCommand
 
 Shipping Service
+
 ↓
+
 ShipmentCreatedEvent
 
 Saga Completed
