@@ -2,5 +2,18 @@ spring:
   application:
     name: saga-orchestrator
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: admin
+    password: password
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: saga-orchestrator
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+
 server:
   port: 8081
